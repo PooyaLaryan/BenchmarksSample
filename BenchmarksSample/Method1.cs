@@ -1,4 +1,5 @@
 ﻿using BenchmarkDotNet.Configs;
+using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Order;
 using BenchmarkDotNet.Running;
 using ConsoleTables;
@@ -16,7 +17,9 @@ namespace BenchmarksSample
         {
             var config = DefaultConfig.Instance
                                         .WithOptions(ConfigOptions.DisableOptimizationsValidator)
-                                        .WithOrderer(new DefaultOrderer(SummaryOrderPolicy.FastestToSlowest));
+                                        .WithOrderer(new DefaultOrderer(SummaryOrderPolicy.FastestToSlowest))
+                                        .WithOptions(ConfigOptions.JoinSummary) // Optional for additional summary details
+                                        .AddJob(BenchmarkDotNet.Jobs.Job.Default.WithWarmupCount(3)); // Set global warmup count;
 
             // Run benchmarks
             var summary = BenchmarkRunner.Run<Benchmarks>(config);
